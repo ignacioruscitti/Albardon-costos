@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Albardón - Calculadora de Costos Cerveceros</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen p-4 font-sans">
+  <div class="max-w-4xl mx-auto space-y-6">
+    
+    <!-- Encabezado -->
+    <header class="bg-amber-600 p-6 rounded-xl shadow-lg border border-amber-500 flex justify-between items-center">
+      <div>
+        <h1 class="text-2xl font-bold tracking-tight">🍺 Albardón - Fábrica de Cerveza</h1>
+        <p class="text-amber-100 text-sm">Calculadora de Costos, Escandallo y Punto de Equilibrio</p>
+      </div>
+    </header>
+
+    <!-- Controles Principales -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      
+      <!-- Costos Fijos -->
+      <section class="bg-slate-800 p-5 rounded-xl border border-slate-700 space-y-4">
+        <h2 class="text-lg font-semibold text-amber-400 border-b border-slate-700 pb-2">1. Costos Fijos Mensuales</h2>
+        <div>
+          <label class="block text-sm text-slate-300 mb-1">Alquiler + Impuestos + Servicios ($/mes)</label>
+          <input id="costoFijo" type="number" value="1200000" oninput="calcular()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white">
+        </div>
+        <div>
+          <label class="block text-sm text-slate-300 mb-1">Sueldos y Estructura ($/mes)</label>
+          <input id="sueldos" type="number" value="1300000" oninput="calcular()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white">
+        </div>
+        <div>
+          <label class="block text-sm text-slate-300 mb-1">Producción Estimada (Litros/mes)</label>
+          <input id="litrosMes" type="number" value="4000" oninput="calcular()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white">
+        </div>
+      </section>
+
+      <!-- Costos del Lote -->
+      <section class="bg-slate-800 p-5 rounded-xl border border-slate-700 space-y-4">
+        <h2 class="text-lg font-semibold text-amber-400 border-b border-slate-700 pb-2">2. Costos del Lote (500L)</h2>
+        <div>
+          <label class="block text-sm text-slate-300 mb-1">Materia Prima Directa (Maltas, Lúpulo, Levadura) ($)</label>
+          <input id="costoReceta" type="number" value="316000" oninput="calcular()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white">
+        </div>
+        <div>
+          <label class="block text-sm text-slate-300 mb-1">Energía Directa Cocción (Gas/Luz) ($)</label>
+          <input id="energiaLote" type="number" value="35000" oninput="calcular()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white">
+        </div>
+        <div>
+          <label class="block text-sm text-slate-300 mb-1">Rendimiento Útil por Lote (Litros Netos)</label>
+          <input id="litrosUtiles" type="number" value="425" oninput="calcular()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white">
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Resultados y Punto de Equilibrio -->
+    <section class="bg-slate-800 p-6 rounded-xl border border-amber-500/30 space-y-4">
+      <h2 class="text-xl font-bold text-amber-400">📊 Resultados y Punto de Equilibrio</h2>
+      
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+        <div class="bg-slate-900 p-4 rounded-lg border border-slate-700">
+          <p class="text-xs text-slate-400">Costo Variable / Litro</p>
+          <p id="costoVarLitro" class="text-xl font-bold text-emerald-400">$825.88</p>
+        </div>
+        <div class="bg-slate-900 p-4 rounded-lg border border-slate-700">
+          <p class="text-xs text-slate-400">Costo Fijo Absoribido / Litro</p>
+
+          <p id="costoFijoLitro" class="text-xl font-bold text-amber-400">$625.00</p>
+        </div>
+        <div class="bg-slate-900 p-4 rounded-lg border border-slate-700">
+          <p class="text-xs text-slate-400">Costo Total Real / Litro</p>
+          <p id="costoTotalLitro" class="text-xl font-bold text-white">$1,450.88</p>
+        </div>
+      </div>
+
+      <div class="mt-4 p-4 bg-amber-950/40 border border-amber-600/40 rounded-lg flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div>
+          <p class="text-sm font-semibold text-amber-200">Punto de Equilibrio Requerido:</p>
+          <p class="text-xs text-slate-300">Ventas para no perder dinero (a $1.850/L)</p>
+        </div>
+        <div class="text-right">
+          <span id="peLitros" class="text-2xl font-extrabold text-amber-400">2,439 L</span>
+          <span id="peBarriles" class="text-sm text-slate-400 block">(~49 Barriles de 50L)</span>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    function calcular() {
+      const fijos = (parseFloat(document.getElementById('costoFijo').value) || 0) + (parseFloat(document.getElementById('sueldos').value) || 0);
+      const litrosMes = parseFloat(document.getElementById('litrosMes').value) || 1;
+      
+      const costoReceta = parseFloat(document.getElementById('costoReceta').value) || 0;
+      const energia = parseFloat(document.getElementById('energiaLote').value) || 0;
+      const litrosUtiles = parseFloat(document.getElementById('litrosUtiles').value) || 1;
+
+      const varLitro = (costoReceta + energia) / litrosUtiles;
+      const fijoLitro = fijos / litrosMes;
+      const totalLitro = varLitro + fijoLitro;
+
+      const precioVenta = 1850;
+      const margen = precioVenta - varLitro;
+      const peLitros = margen > 0 ? Math.ceil(fijos / margen) : 0;
+      const peBarriles = Math.ceil(peLitros / 50);
+
+      document.getElementById('costoVarLitro').innerText = '$' + varLitro.toFixed(2);
+      document.getElementById('costoFijoLitro').innerText = '$' + fijoLitro.toFixed(2);
+      document.getElementById('costoTotalLitro').innerText = '$' + totalLitro.toFixed(2);
+      
+      document.getElementById('peLitros').innerText = peLitros.toLocaleString() + ' L';
+      document.getElementById('peBarriles').innerText = '(~' + peBarriles + ' Barriles de 50L)';
+    }
+
+    calcular();
+  </script>
+</body>
+</html>
