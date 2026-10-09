@@ -3,24 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Albardón - Calculadora de Costos Cerveceros</title>
+  <title>ALBARDÓN - Costos</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen p-4 font-sans">
   <div class="max-w-4xl mx-auto space-y-6">
     
-    <!-- Encabezado -->
     <header class="bg-amber-600 p-6 rounded-xl shadow-lg border border-amber-500 flex justify-between items-center">
       <div>
-        <h1 class="text-2xl font-bold tracking-tight">🍺 Albardón - Fábrica de Cerveza</h1>
-        <p class="text-amber-100 text-sm">Calculadora de Costos, Escandallo y Punto de Equilibrio</p>
+        <h1 class="text-3xl font-extrabold tracking-tight">ALBARDÓN - Costos</h1>
+        <p class="text-amber-100 text-sm mt-1">Gestión de Insumos, Recetas por Estilo y Punto de Equilibrio</p>
       </div>
     </header>
 
-    <!-- Controles Principales -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       
-      <!-- Costos Fijos -->
       <section class="bg-slate-800 p-5 rounded-xl border border-slate-700 space-y-4">
         <h2 class="text-lg font-semibold text-amber-400 border-b border-slate-700 pb-2">1. Costos Fijos Mensuales</h2>
         <div>
@@ -37,7 +34,6 @@
         </div>
       </section>
 
-      <!-- Costos del Lote -->
       <section class="bg-slate-800 p-5 rounded-xl border border-slate-700 space-y-4">
         <h2 class="text-lg font-semibold text-amber-400 border-b border-slate-700 pb-2">2. Costos del Lote (500L)</h2>
         <div>
@@ -56,7 +52,6 @@
 
     </div>
 
-    <!-- Resultados y Punto de Equilibrio -->
     <section class="bg-slate-800 p-6 rounded-xl border border-amber-500/30 space-y-4">
       <h2 class="text-xl font-bold text-amber-400">📊 Resultados y Punto de Equilibrio</h2>
       
@@ -66,8 +61,7 @@
           <p id="costoVarLitro" class="text-xl font-bold text-emerald-400">$825.88</p>
         </div>
         <div class="bg-slate-900 p-4 rounded-lg border border-slate-700">
-          <p class="text-xs text-slate-400">Costo Fijo Absoribido / Litro</p>
-
+          <p class="text-xs text-slate-400">Costo Fijo Absorbido / Litro</p>
           <p id="costoFijoLitro" class="text-xl font-bold text-amber-400">$625.00</p>
         </div>
         <div class="bg-slate-900 p-4 rounded-lg border border-slate-700">
