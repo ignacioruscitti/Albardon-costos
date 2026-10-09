@@ -16,7 +16,7 @@
     <header class="bg-amber-600 p-6 rounded-xl shadow-lg border border-amber-500 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
       <div>
         <h1 class="text-3xl font-extrabold tracking-tight">ALBARDÓN - Costos</h1>
-        <p class="text-amber-100 text-sm mt-1">Escandallo basado en Planilla de Producción</p>
+        <p class="text-amber-100 text-sm mt-1">Escandallo de Producción y Costos en Tiempo Real</p>
       </div>
       <div id="estadoNube" class="text-xs bg-amber-800 text-amber-200 px-3 py-1.5 rounded-full border border-amber-500 font-medium">
         ⏳ Conectando a la nube...
@@ -42,11 +42,11 @@
       </section>
 
       <section class="bg-slate-800 p-4 rounded-xl border border-slate-700 space-y-3 md:col-span-2">
-        <h2 class="text-sm font-semibold text-amber-400 border-b border-slate-700 pb-1">Estructura Fija Mensual (Absorción)</h2>
+        <h2 class="text-sm font-semibold text-amber-400 border-b border-slate-700 pb-1">Estructura Fija Mensual (Alquiler + Electricidad + Servicios)</h2>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div>
-            <label class="block text-xs text-slate-400 mb-1">Alquiler + Servicios ($)</label>
-            <input id="costoFijo" type="number" value="1200000" oninput="guardarFijosNube(); calcularTodo();" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-xs text-white">
+            <label class="block text-xs text-slate-400 mb-1">Alquiler + Elecr. + Serv. ($)</label>
+            <input id="costoFijo" type="number" value="1350000" oninput="guardarFijosNube(); calcularTodo();" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-xs text-white">
           </div>
           <div>
             <label class="block text-xs text-slate-400 mb-1">Sueldos y Estructura ($)</label>
@@ -127,10 +127,11 @@
         <button onclick="agregarFila('lupulo')" class="text-xs text-amber-400 hover:underline">+ Agregar Lúpulo</button>
       </div>
 
-      <!-- Clarificante y Levadura -->
+      <!-- Sales y Levadura -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Sales (Tratamiento de Agua) -->
         <div class="space-y-2">
-          <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider">✨ Clarificante</h3>
+          <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider">🧂 Sales (Agua)</h3>
           <table class="w-full text-left text-xs text-slate-300">
             <thead class="bg-slate-900 text-slate-400">
               <tr>
@@ -138,31 +139,54 @@
                 <th class="p-2 w-20">Cant. (grs)</th>
                 <th class="p-2 w-24">$/100grs</th>
                 <th class="p-2 text-right">Total</th>
+                <th class="p-2 w-6"></th>
               </tr>
             </thead>
-            <tbody id="tablaClarificante" class="divide-y divide-slate-700"></tbody>
+            <tbody id="tablaSales" class="divide-y divide-slate-700"></tbody>
           </table>
+          <button onclick="agregarFila('sales')" class="text-xs text-amber-400 hover:underline">+ Agregar Sal</button>
         </div>
 
+        <!-- Levadura (en Gramos) -->
         <div class="space-y-2">
-          <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider">🧫 Levadura</h3>
+          <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider">🧫 Levadura (en Gramos)</h3>
           <table class="w-full text-left text-xs text-slate-300">
             <thead class="bg-slate-900 text-slate-400">
               <tr>
                 <th class="p-2">Tipo</th>
-                <th class="p-2 w-20">Cant. (sobres)</th>
-                <th class="p-2 w-24">$/sobre</th>
+                <th class="p-2 w-20">Cant. (grs)</th>
+                <th class="p-2 w-24">$/kg ($)</th>
                 <th class="p-2 text-right">Total</th>
+                <th class="p-2 w-6"></th>
               </tr>
             </thead>
             <tbody id="tablaLevadura" class="divide-y divide-slate-700"></tbody>
           </table>
+          <button onclick="agregarFila('levadura')" class="text-xs text-amber-400 hover:underline">+ Agregar Levadura</button>
         </div>
       </div>
 
-      <!-- Servicios Directos (Gas y Luz) -->
+      <!-- Clarificante -->
+      <div class="space-y-2">
+        <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider">✨ Clarificante</h3>
+        <table class="w-full text-left text-xs text-slate-300">
+          <thead class="bg-slate-900 text-slate-400">
+            <tr>
+              <th class="p-2">Tipo</th>
+              <th class="p-2 w-24">Cant. (grs)</th>
+              <th class="p-2 w-32">$/100grs ($)</th>
+              <th class="p-2 text-right">Total ($)</th>
+              <th class="p-2 w-8"></th>
+            </tr>
+          </thead>
+          <tbody id="tablaClarificante" class="divide-y divide-slate-700"></tbody>
+        </table>
+        <button onclick="agregarFila('clarificante')" class="text-xs text-amber-400 hover:underline">+ Agregar Clarificante</button>
+      </div>
+
+      <!-- Servicios Directos y Sanitización -->
       <div class="space-y-2 border-t border-slate-700 pt-3">
-        <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider">🔥 Varios (Servicios Directos)</h3>
+        <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider">🔥 Varios (Gas y Sanitización del Lote)</h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-900/60 p-3 rounded-lg text-xs">
           <div>
             <label class="block text-slate-400 mb-1">Gas Cocción (Horas x 1.9 kg/h)</label>
@@ -172,8 +196,8 @@
             </div>
           </div>
           <div>
-            <label class="block text-slate-400 mb-1">Electricidad Estimada por Lote ($)</label>
-            <input id="costoElec" type="number" value="12000" oninput="calcularTodo()" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-white">
+            <label class="block text-slate-400 mb-1">Limpieza y Sanitización por Lote ($)</label>
+            <input id="costoLimpieza" type="number" value="8500" oninput="calcularTodo()" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-white" placeholder="Costo insumos de limpieza">
           </div>
         </div>
       </div>
@@ -263,8 +287,9 @@
     let recetaEstado = {
       granos: [{ tipo: 'Malta Pilsen', cant: 100, precio: 1200 }],
       lupulo: [{ tipo: 'Cascade', cant: 500, precio: 4200 }],
+      sales: [{ tipo: 'Cloruro de Calcio', cant: 150, precio: 800 }],
       clarificante: [{ tipo: 'Irish Moss', cant: 50, precio: 1800 }],
-      levadura: [{ tipo: 'US-05', cant: 2, precio: 18000 }]
+      levadura: [{ tipo: 'US-05', cant: 100, precio: 36000 }] // Cantidad en grs, precio en $/kg
     };
 
     function cargarDesdeNube() {
@@ -291,8 +316,9 @@
         nombre: 'Golden Ale',
         granos: [{ tipo: 'Malta Pilsen', cant: 110, precio: 1200 }],
         lupulo: [{ tipo: 'Cascade', cant: 600, precio: 3800 }],
+        sales: [{ tipo: 'Cloruro de Calcio', cant: 120, precio: 850 }],
         clarificante: [{ tipo: 'Irish Moss', cant: 40, precio: 1500 }],
-        levadura: [{ tipo: 'US-05', cant: 2, precio: 18000 }]
+        levadura: [{ tipo: 'US-05', cant: 115, precio: 38000 }]
       };
       if(rtdb) {
         const ref = rtdb.ref('recetas').push();
@@ -318,6 +344,7 @@
       document.getElementById('nombreEstilo').value = r.nombre || 'Sin Nombre';
       recetaEstado.granos = r.granos || [];
       recetaEstado.lupulo = r.lupulo || [];
+      recetaEstado.sales = r.sales || [];
       recetaEstado.clarificante = r.clarificante || [];
       recetaEstado.levadura = r.levadura || [];
 
@@ -327,6 +354,7 @@
     function renderTablas() {
       renderSeccion('granos', 'tablaGranos');
       renderSeccion('lupulo', 'tablaLupulo');
+      renderSeccion('sales', 'tablaSales');
       renderSeccion('clarificante', 'tablaClarificante');
       renderSeccion('levadura', 'tablaLevadura');
       calcularTodo();
@@ -338,8 +366,8 @@
       recetaEstado[key].forEach((item, idx) => {
         let subtotal = 0;
         if(key === 'granos') subtotal = item.cant * item.precio;
-        if(key === 'lupulo' || key === 'clarificante') subtotal = (item.cant / 100) * item.precio;
-        if(key === 'levadura') subtotal = item.cant * item.precio;
+        if(key === 'lupulo' || key === 'clarificante' || key === 'sales') subtotal = (item.cant / 100) * item.precio;
+        if(key === 'levadura') subtotal = (item.cant / 1000) * item.precio; // cant en grs, precio en $/kg
 
         tbody.innerHTML += `
           <tr>
@@ -354,7 +382,7 @@
     }
 
     function agregarFila(key) {
-      recetaEstado[key].push({ tipo: 'Nuevo', cant: 0, precio: 0 });
+      recetaEstado[key].push({ tipo: 'Nuevo Insumo', cant: 0, precio: 0 });
       renderTablas();
     }
 
@@ -374,6 +402,7 @@
         nombre: nombre,
         granos: recetaEstado.granos,
         lupulo: recetaEstado.lupulo,
+        sales: recetaEstado.sales,
         clarificante: recetaEstado.clarificante,
         levadura: recetaEstado.levadura
       };
@@ -388,8 +417,9 @@
         nombre: 'Nuevo Estilo',
         granos: [{ tipo: 'Malta Base', cant: 100, precio: 1200 }],
         lupulo: [{ tipo: 'Lúpulo Base', cant: 500, precio: 4000 }],
+        sales: [{ tipo: 'Sal Base', cant: 100, precio: 800 }],
         clarificante: [{ tipo: 'Clarificante', cant: 30, precio: 1500 }],
-        levadura: [{ tipo: 'Levadura', cant: 2, precio: 18000 }]
+        levadura: [{ tipo: 'Levadura', cant: 100, precio: 36000 }]
       };
       if(rtdb) {
         const ref = rtdb.ref('recetas').push();
@@ -408,20 +438,22 @@
     function calcularTodo() {
       const litrosBatch = parseFloat(document.getElementById('litrosBatch').value) || 1;
 
-      // Totales
+      // Totales por rubro
       const totGranos = recetaEstado.granos.reduce((a, b) => a + (b.cant * b.precio), 0);
       const totLupulo = recetaEstado.lupulo.reduce((a, b) => a + ((b.cant / 100) * b.precio), 0);
+      const totSales = recetaEstado.sales.reduce((a, b) => a + ((b.cant / 100) * b.precio), 0);
       const totClari = recetaEstado.clarificante.reduce((a, b) => a + ((b.cant / 100) * b.precio), 0);
-      const totLeva = recetaEstado.levadura.reduce((a, b) => a + (b.cant * b.precio), 0);
+      const totLeva = recetaEstado.levadura.reduce((a, b) => a + ((b.cant / 1000) * b.precio), 0);
 
       // Gas (1.9 kg/h)
       const hsGas = parseFloat(document.getElementById('horasGas').value) || 0;
       const precioGas = parseFloat(document.getElementById('precioKgGas').value) || 0;
       const totGas = hsGas * 1.9 * precioGas;
 
-      const totElec = parseFloat(document.getElementById('costoElec').value) || 0;
+      // Limpieza y Sanitización
+      const totLimpieza = parseFloat(document.getElementById('costoLimpieza').value) || 0;
 
-      const costoTotalIngredientes = totGranos + totLupulo + totClari + totLeva + totGas + totElec;
+      const costoTotalIngredientes = totGranos + totLupulo + totSales + totClari + totLeva + totGas + totLimpieza;
       const costoLitroBase = costoTotalIngredientes / litrosBatch;
 
       // Packaging
