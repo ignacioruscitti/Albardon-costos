@@ -7,77 +7,101 @@
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen p-4 font-sans">
-  <div class="max-w-4xl mx-auto space-y-6">
+  <div class="max-w-5xl mx-auto space-y-6">
     
     <header class="bg-amber-600 p-6 rounded-xl shadow-lg border border-amber-500 flex justify-between items-center">
       <div>
         <h1 class="text-3xl font-extrabold tracking-tight">ALBARDÓN - Costos</h1>
-        <p class="text-amber-100 text-sm mt-1">Gestión de Insumos, Recetas por Estilo y Punto de Equilibrio</p>
+        <p class="text-amber-100 text-sm mt-1">Gestión de Insumos, Escandallo de Recetas y Punto de Equilibrio</p>
       </div>
     </header>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      
-      <section class="bg-slate-800 p-5 rounded-xl border border-slate-700 space-y-4">
-        <h2 class="text-lg font-semibold text-amber-400 border-b border-slate-700 pb-2">1. Costos Fijos Mensuales</h2>
+    <section class="bg-slate-800 p-5 rounded-xl border border-slate-700 space-y-4">
+      <h2 class="text-lg font-semibold text-amber-400 border-b border-slate-700 pb-2">1. Estrutura Fija Mensual</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
-          <label class="block text-sm text-slate-300 mb-1">Alquiler + Impuestos + Servicios ($/mes)</label>
+          <label class="block text-xs text-slate-400 mb-1">Alquiler + Servicios ($/mes)</label>
           <input id="costoFijo" type="number" value="1200000" oninput="calcular()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white">
         </div>
         <div>
-          <label class="block text-sm text-slate-300 mb-1">Sueldos y Estructura ($/mes)</label>
+          <label class="block text-xs text-slate-400 mb-1">Sueldos y Estructura ($/mes)</label>
           <input id="sueldos" type="number" value="1300000" oninput="calcular()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white">
         </div>
         <div>
-          <label class="block text-sm text-slate-300 mb-1">Producción Estimada (Litros/mes)</label>
+          <label class="block text-xs text-slate-400 mb-1">Producción Objetivo (L/mes)</label>
           <input id="litrosMes" type="number" value="4000" oninput="calcular()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white">
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section class="bg-slate-800 p-5 rounded-xl border border-slate-700 space-y-4">
-        <h2 class="text-lg font-semibold text-amber-400 border-b border-slate-700 pb-2">2. Costos del Lote (500L)</h2>
-        <div>
-          <label class="block text-sm text-slate-300 mb-1">Materia Prima Directa (Maltas, Lúpulo, Levadura) ($)</label>
-          <input id="costoReceta" type="number" value="316000" oninput="calcular()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white">
-        </div>
-        <div>
-          <label class="block text-sm text-slate-300 mb-1">Energía Directa Cocción (Gas/Luz) ($)</label>
-          <input id="energiaLote" type="number" value="35000" oninput="calcular()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white">
-        </div>
-        <div>
-          <label class="block text-sm text-slate-300 mb-1">Rendimiento Útil por Lote (Litros Netos)</label>
-          <input id="litrosUtiles" type="number" value="425" oninput="calcular()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white">
-        </div>
-      </section>
+    <section class="bg-slate-800 p-5 rounded-xl border border-slate-700 space-y-4">
+      <div class="flex justify-between items-center border-b border-slate-700 pb-2">
+        <h2 class="text-lg font-semibold text-amber-400">2. Carga de Receta por Estilo</h2>
+        <input id="nombreEstilo" type="text" value="IPA Cervecería" class="bg-slate-900 border border-amber-500/50 rounded-lg px-3 py-1 text-sm font-bold text-amber-300">
+      </div>
 
-    </div>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-slate-900/60 p-3 rounded-lg">
+        <div>
+          <label class="block text-xs text-slate-400 mb-1">Tamaño Lote Mosto (L)</label>
+          <input id="volumenLote" type="number" value="500" oninput="calcularReceta()" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white text-sm">
+        </div>
+        <div>
+          <label class="block text-xs text-slate-400 mb-1">Pérdida / Merma (%)</label>
+          <input id="mermaPct" type="number" value="15" oninput="calcularReceta()" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white text-sm">
+        </div>
+        <div>
+          <label class="block text-xs text-slate-400 mb-1">Litros Finales Netos (L)</label>
+          <div id="litrosNetos" class="p-2 text-amber-400 font-bold text-base">425 L</div>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-sm text-slate-300">
+          <thead class="bg-slate-900 text-xs text-amber-400 uppercase">
+            <tr>
+              <th class="p-2">Insumo / Ingrediente</th>
+              <th class="p-2 w-28">Cantidad</th>
+              <th class="p-2 w-24">Unidad</th>
+              <th class="p-2 w-32">Precio Un. ($)</th>
+              <th class="p-2 w-32 text-right">Subtotal ($)</th>
+            </tr>
+          </thead>
+          <tbody id="tablaInsumos" class="divide-y divide-slate-700">
+            </tbody>
+        </table>
+      </div>
+
+      <button onclick="agregarInsumo()" class="mt-2 text-xs bg-amber-600/30 hover:bg-amber-600/50 text-amber-300 px-3 py-1.5 rounded border border-amber-500/40">
+        + Agregar Insumo
+      </button>
+    </section>
 
     <section class="bg-slate-800 p-6 rounded-xl border border-amber-500/30 space-y-4">
-      <h2 class="text-xl font-bold text-amber-400">📊 Resultados y Punto de Equilibrio</h2>
+      <h2 class="text-xl font-bold text-amber-400">📊 Análisis de Costos por Litro y Equilibrio</h2>
       
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
         <div class="bg-slate-900 p-4 rounded-lg border border-slate-700">
-          <p class="text-xs text-slate-400">Costo Variable / Litro</p>
-          <p id="costoVarLitro" class="text-xl font-bold text-emerald-400">$825.88</p>
+          <p class="text-xs text-slate-400">Costo Directo Insumos / Litro</p>
+          <p id="costoVarLitro" class="text-xl font-bold text-emerald-400">$0.00</p>
         </div>
         <div class="bg-slate-900 p-4 rounded-lg border border-slate-700">
           <p class="text-xs text-slate-400">Costo Fijo Absorbido / Litro</p>
-          <p id="costoFijoLitro" class="text-xl font-bold text-amber-400">$625.00</p>
+          <p id="costoFijoLitro" class="text-xl font-bold text-amber-400">$0.00</p>
         </div>
         <div class="bg-slate-900 p-4 rounded-lg border border-slate-700">
           <p class="text-xs text-slate-400">Costo Total Real / Litro</p>
-          <p id="costoTotalLitro" class="text-xl font-bold text-white">$1,450.88</p>
+          <p id="costoTotalLitro" class="text-xl font-bold text-white">$0.00</p>
         </div>
       </div>
 
       <div class="mt-4 p-4 bg-amber-950/40 border border-amber-600/40 rounded-lg flex flex-col sm:flex-row justify-between items-center gap-4">
         <div>
           <p class="text-sm font-semibold text-amber-200">Punto de Equilibrio Requerido:</p>
-          <p class="text-xs text-slate-300">Ventas para no perder dinero (a $1.850/L)</p>
+          <p class="text-xs text-slate-300">Volumen mensual para cubrir todos los costos fijos (a $1.850/L)</p>
         </div>
         <div class="text-right">
-          <span id="peLitros" class="text-2xl font-extrabold text-amber-400">2,439 L</span>
-          <span id="peBarriles" class="text-sm text-slate-400 block">(~49 Barriles de 50L)</span>
+          <span id="peLitros" class="text-2xl font-extrabold text-amber-400">0 L</span>
+          <span id="peBarriles" class="text-sm text-slate-400 block">(~0 Barriles de 50L)</span>
         </div>
       </div>
     </section>
@@ -85,15 +109,61 @@
   </div>
 
   <script>
-    function calcular() {
+    let insumos = [
+      { nombre: 'Malta Pilsen', cantidad: 110, unidad: 'kg', precio: 1200 },
+      { nombre: 'Malta Caramel', cantidad: 10, unidad: 'kg', precio: 1600 },
+      { nombre: 'Lúpulo Mosaic', cantidad: 1.5, unidad: 'kg', precio: 45000 },
+      { nombre: 'Levadura US-05', cantidad: 2, unidad: 'sobres', precio: 18000 }
+    ];
+
+    function renderTabla() {
+      const tbody = document.getElementById('tablaInsumos');
+      tbody.innerHTML = '';
+      insumos.forEach((item, index) => {
+        const subtotal = item.cantidad * item.precio;
+        tbody.innerHTML += `
+          <tr>
+            <td class="p-2"><input type="text" value="${item.nombre}" onchange="actualizarInsumo(${index}, 'nombre', this.value)" class="bg-slate-900 border border-slate-700 rounded p-1 w-full text-xs"></td>
+            <td class="p-2"><input type="number" value="${item.cantidad}" onchange="actualizarInsumo(${index}, 'cantidad', this.value)" class="bg-slate-900 border border-slate-700 rounded p-1 w-full text-xs"></td>
+            <td class="p-2"><input type="text" value="${item.unidad}" onchange="actualizarInsumo(${index}, 'unidad', this.value)" class="bg-slate-900 border border-slate-700 rounded p-1 w-full text-xs"></td>
+            <td class="p-2"><input type="number" value="${item.precio}" onchange="actualizarInsumo(${index}, 'precio', this.value)" class="bg-slate-900 border border-slate-700 rounded p-1 w-full text-xs"></td>
+            <td class="p-2 text-right font-semibold text-emerald-400">$${subtotal.toLocaleString()}</td>
+          </tr>
+        `;
+      });
+      calcularReceta();
+    }
+
+    function agregarInsumo() {
+      insumos.push({ nombre: 'Nuevo Insumo', cantidad: 1, unidad: 'kg', precio: 0 });
+      renderTabla();
+    }
+
+    function actualizarInsumo(index, campo, valor) {
+      if (campo === 'cantidad' || campo === 'precio') {
+        insumos[index][campo] = parseFloat(valor) || 0;
+      } else {
+        insumos[index][campo] = valor;
+      }
+      renderTabla();
+    }
+
+    function calcularReceta() {
+      const volLote = parseFloat(document.getElementById('volumenLote').value) || 1;
+      const merma = parseFloat(document.getElementById('mermaPct').value) || 0;
+      const litrosNetos = volLote * (1 - (merma / 100));
+      document.getElementById('litrosNetos').innerText = Math.round(litrosNetos) + ' L';
+
+      const costoTotalInsumos = insumos.reduce((acc, item) => acc + (item.cantidad * item.precio), 0);
+      const varLitro = litrosNetos > 0 ? (costoTotalInsumos / litrosNetos) : 0;
+
+      calcular(varLitro);
+    }
+
+    function calcular(varLitro = 0) {
       const fijos = (parseFloat(document.getElementById('costoFijo').value) || 0) + (parseFloat(document.getElementById('sueldos').value) || 0);
       const litrosMes = parseFloat(document.getElementById('litrosMes').value) || 1;
-      
-      const costoReceta = parseFloat(document.getElementById('costoReceta').value) || 0;
-      const energia = parseFloat(document.getElementById('energiaLote').value) || 0;
-      const litrosUtiles = parseFloat(document.getElementById('litrosUtiles').value) || 1;
 
-      const varLitro = (costoReceta + energia) / litrosUtiles;
       const fijoLitro = fijos / litrosMes;
       const totalLitro = varLitro + fijoLitro;
 
@@ -110,7 +180,7 @@
       document.getElementById('peBarriles').innerText = '(~' + peBarriles + ' Barriles de 50L)';
     }
 
-    calcular();
+    renderTabla();
   </script>
 </body>
 </html>
