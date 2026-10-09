@@ -9,6 +9,7 @@
 <body class="bg-slate-900 text-slate-100 min-h-screen p-4 font-sans">
   <div class="max-w-5xl mx-auto space-y-6">
     
+    <!-- Encabezado -->
     <header class="bg-amber-600 p-6 rounded-xl shadow-lg border border-amber-500 flex justify-between items-center">
       <div>
         <h1 class="text-3xl font-extrabold tracking-tight">ALBARDÓN - Costos</h1>
@@ -16,30 +17,53 @@
       </div>
     </header>
 
+    <!-- Estructura de Costos Fijos Mensuales -->
     <section class="bg-slate-800 p-5 rounded-xl border border-slate-700 space-y-4">
-      <h2 class="text-lg font-semibold text-amber-400 border-b border-slate-700 pb-2">1. Estrutura Fija Mensual</h2>
+      <h2 class="text-lg font-semibold text-amber-400 border-b border-slate-700 pb-2">1. Estructura Fija Mensual</h2>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
           <label class="block text-xs text-slate-400 mb-1">Alquiler + Servicios ($/mes)</label>
-          <input id="costoFijo" type="number" value="1200000" oninput="calcular()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white">
+          <input id="costoFijo" type="number" value="1200000" oninput="guardarFijos(); calcular();" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white">
         </div>
         <div>
           <label class="block text-xs text-slate-400 mb-1">Sueldos y Estructura ($/mes)</label>
-          <input id="sueldos" type="number" value="1300000" oninput="calcular()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white">
+          <input id="sueldos" type="number" value="1300000" oninput="guardarFijos(); calcular();" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white">
         </div>
         <div>
           <label class="block text-xs text-slate-400 mb-1">Producción Objetivo (L/mes)</label>
-          <input id="litrosMes" type="number" value="4000" oninput="calcular()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white">
+          <input id="litrosMes" type="number" value="4000" oninput="guardarFijos(); calcular();" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white">
         </div>
       </div>
     </section>
 
+    <!-- Módulo de Recetas por Estilo -->
     <section class="bg-slate-800 p-5 rounded-xl border border-slate-700 space-y-4">
-      <div class="flex justify-between items-center border-b border-slate-700 pb-2">
-        <h2 class="text-lg font-semibold text-amber-400">2. Carga de Receta por Estilo</h2>
-        <input id="nombreEstilo" type="text" value="IPA Cervecería" class="bg-slate-900 border border-amber-500/50 rounded-lg px-3 py-1 text-sm font-bold text-amber-300">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-700 pb-3">
+        <div class="flex items-center gap-2 w-full sm:w-auto">
+          <label class="text-sm text-slate-300 font-semibold">Receta:</label>
+          <select id="selectorRecetas" onchange="cargarRecetaSeleccionada()" class="bg-slate-900 border border-amber-500/50 rounded-lg px-3 py-1.5 text-sm font-bold text-amber-300 flex-1">
+          </select>
+        </div>
+        <div class="flex gap-2">
+          <button onclick="nuevaReceta()" class="text-xs bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-2 rounded">
+            + Nueva Receta
+          </button>
+          <button onclick="guardarRecetaActual()" class="text-xs bg-amber-600 hover:bg-amber-500 text-white font-bold px-3 py-2 rounded">
+            💾 Guardar Receta
+          </button>
+          <button onclick="borrarRecetaActual()" class="text-xs bg-rose-800 hover:bg-rose-700 text-white font-bold px-2.5 py-2 rounded">
+            🗑️
+          </button>
+        </div>
       </div>
 
+      <!-- Nombre del Estilo -->
+      <div>
+        <label class="block text-xs text-slate-400 mb-1">Nombre del Estilo / Receta</label>
+        <input id="nombreEstilo" type="text" value="IPA Cervecería" oninput="actualizarNombreEnSelector()" class="w-full sm:w-1/2 bg-slate-900 border border-slate-700 rounded-lg p-2 text-amber-300 font-bold">
+      </div>
+
+      <!-- Parámetros Generales del Lote -->
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-slate-900/60 p-3 rounded-lg">
         <div>
           <label class="block text-xs text-slate-400 mb-1">Tamaño Lote Mosto (L)</label>
@@ -55,6 +79,7 @@
         </div>
       </div>
 
+      <!-- Tabla de Insumos -->
       <div class="overflow-x-auto">
         <table class="w-full text-left text-sm text-slate-300">
           <thead class="bg-slate-900 text-xs text-amber-400 uppercase">
@@ -63,11 +88,12 @@
               <th class="p-2 w-28">Cantidad</th>
               <th class="p-2 w-24">Unidad</th>
               <th class="p-2 w-32">Precio Un. ($)</th>
-              <th class="p-2 w-32 text-right">Subtotal ($)</th>
+              <th class="p-2 w-28 text-right">Subtotal ($)</th>
+              <th class="p-2 w-10 text-center"></th>
             </tr>
           </thead>
           <tbody id="tablaInsumos" class="divide-y divide-slate-700">
-            </tbody>
+          </tbody>
         </table>
       </div>
 
@@ -76,6 +102,7 @@
       </button>
     </section>
 
+    <!-- Resultados y Punto de Equilibrio -->
     <section class="bg-slate-800 p-6 rounded-xl border border-amber-500/30 space-y-4">
       <h2 class="text-xl font-bold text-amber-400">📊 Análisis de Costos por Litro y Equilibrio</h2>
       
@@ -109,12 +136,120 @@
   </div>
 
   <script>
-    let insumos = [
-      { nombre: 'Malta Pilsen', cantidad: 110, unidad: 'kg', precio: 1200 },
-      { nombre: 'Malta Caramel', cantidad: 10, unidad: 'kg', precio: 1600 },
-      { nombre: 'Lúpulo Mosaic', cantidad: 1.5, unidad: 'kg', precio: 45000 },
-      { nombre: 'Levadura US-05', cantidad: 2, unidad: 'sobres', precio: 18000 }
+    let recetasBD = JSON.parse(localStorage.getItem('albardon_recetas')) || [
+      {
+        id: 'receta_1',
+        nombre: 'IPA Cervecería',
+        volumenLote: 500,
+        mermaPct: 15,
+        insumos: [
+          { nombre: 'Malta Pilsen', cantidad: 110, unidad: 'kg', precio: 1200 },
+          { nombre: 'Malta Caramel', cantidad: 10, unidad: 'kg', precio: 1600 },
+          { nombre: 'Lúpulo Mosaic', cantidad: 1.5, unidad: 'kg', precio: 45000 },
+          { nombre: 'Levadura US-05', cantidad: 2, unidad: 'sobres', precio: 18000 }
+        ]
+      }
     ];
+
+    let recetaActualId = recetasBD[0]?.id || 'receta_1';
+    let insumos = [];
+
+    function cargarDatosIniciales() {
+      const fijosGuardados = JSON.parse(localStorage.getItem('albardon_fijos'));
+      if (fijosGuardados) {
+        document.getElementById('costoFijo').value = fijosGuardados.costoFijo || 1200000;
+        document.getElementById('sueldos').value = fijosGuardados.sueldos || 1300000;
+        document.getElementById('litrosMes').value = fijosGuardados.litrosMes || 4000;
+      }
+      actualizarSelector();
+      cargarRecetaSeleccionada();
+    }
+
+    function guardarFijos() {
+      const fijos = {
+        costoFijo: parseFloat(document.getElementById('costoFijo').value) || 0,
+        sueldos: parseFloat(document.getElementById('sueldos').value) || 0,
+        litrosMes: parseFloat(document.getElementById('litrosMes').value) || 1
+      };
+      localStorage.setItem('albardon_fijos', JSON.stringify(fijos));
+    }
+
+    function actualizarSelector() {
+      const selector = document.getElementById('selectorRecetas');
+      selector.innerHTML = '';
+      recetasBD.forEach(r => {
+        selector.innerHTML += `<option value="${r.id}">${r.nombre}</option>`;
+      });
+      selector.value = recetaActualId;
+    }
+
+    function cargarRecetaSeleccionada() {
+      const selector = document.getElementById('selectorRecetas');
+      recetaActualId = selector.value;
+      const receta = recetasBD.find(r => r.id === recetaActualId);
+      if (!receta) return;
+
+      document.getElementById('nombreEstilo').value = receta.nombre;
+      document.getElementById('volumenLote').value = receta.volumenLote;
+      document.getElementById('mermaPct').value = receta.mermaPct;
+      insumos = JSON.parse(JSON.stringify(receta.insumos));
+
+      renderTabla();
+    }
+
+    function guardarRecetaActual() {
+      const nombre = document.getElementById('nombreEstilo').value.trim() || 'Receta Sin Nombre';
+      const vol = parseFloat(document.getElementById('volumenLote').value) || 500;
+      const merma = parseFloat(document.getElementById('mermaPct').value) || 0;
+
+      const index = recetasBD.findIndex(r => r.id === recetaActualId);
+      const datosReceta = {
+        id: recetaActualId,
+        nombre: nombre,
+        volumenLote: vol,
+        mermaPct: merma,
+        insumos: insumos
+      };
+
+      if (index >= 0) {
+        recetasBD[index] = datosReceta;
+      } else {
+        recetasBD.push(datosReceta);
+      }
+
+      localStorage.setItem('albardon_recetas', JSON.stringify(recetasBD));
+      actualizarSelector();
+      alert('✅ Receta "' + nombre + '" guardada correctamente.');
+    }
+
+    function nuevaReceta() {
+      const nuevoId = 'receta_' + Date.now();
+      const nueva = {
+        id: nuevoId,
+        nombre: 'Nueva Receta',
+        volumenLote: 500,
+        mermaPct: 10,
+        insumos: [{ nombre: 'Malta Base', cantidad: 100, unidad: 'kg', precio: 1200 }]
+      };
+      recetasBD.push(nueva);
+      recetaActualId = nuevoId;
+      actualizarSelector();
+      cargarRecetaSeleccionada();
+    }
+
+    function borrarRecetaActual() {
+      if (recetasBD.length <= 1) {
+        alert('⚠️ No podés borrar la única receta disponible.');
+        return;
+      }
+      if (confirm('¿Seguro que querés borrar esta receta?')) {
+        recetasBD = recetasBD.filter(r => r.id !== recetaActualId);
+        localStorage.setItem('albardon_recetas', JSON.stringify(recetasBD));
+        recetaActualId = recetasBD[0].id;
+        actualizarSelector();
+        cargarRecetaSeleccionada();
+      }
+    }
 
     function renderTabla() {
       const tbody = document.getElementById('tablaInsumos');
@@ -128,6 +263,7 @@
             <td class="p-2"><input type="text" value="${item.unidad}" onchange="actualizarInsumo(${index}, 'unidad', this.value)" class="bg-slate-900 border border-slate-700 rounded p-1 w-full text-xs"></td>
             <td class="p-2"><input type="number" value="${item.precio}" onchange="actualizarInsumo(${index}, 'precio', this.value)" class="bg-slate-900 border border-slate-700 rounded p-1 w-full text-xs"></td>
             <td class="p-2 text-right font-semibold text-emerald-400">$${subtotal.toLocaleString()}</td>
+            <td class="p-2 text-center"><button onclick="eliminarInsumo(${index})" class="text-slate-500 hover:text-rose-400 font-bold text-xs">✕</button></td>
           </tr>
         `;
       });
@@ -136,6 +272,11 @@
 
     function agregarInsumo() {
       insumos.push({ nombre: 'Nuevo Insumo', cantidad: 1, unidad: 'kg', precio: 0 });
+      renderTabla();
+    }
+
+    function eliminarInsumo(index) {
+      insumos.splice(index, 1);
       renderTabla();
     }
 
@@ -180,7 +321,13 @@
       document.getElementById('peBarriles').innerText = '(~' + peBarriles + ' Barriles de 50L)';
     }
 
-    renderTabla();
+    function actualizarNombreEnSelector() {
+      const nombre = document.getElementById('nombreEstilo').value;
+      const option = document.querySelector(`#selectorRecetas option[value="${recetaActualId}"]`);
+      if (option) option.textContent = nombre;
+    }
+
+    cargarDatosIniciales();
   </script>
 </body>
 </html>
