@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ALBARDÓN - Costos</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- SDKs de Firebase Compatibles -->
+  <!-- SDKs de Firebase -->
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 </head>
@@ -13,49 +13,67 @@
   <div class="max-w-5xl mx-auto space-y-6">
     
     <!-- Encabezado -->
-    <header class="bg-amber-600 p-6 rounded-xl shadow-lg border border-amber-500 flex justify-between items-center">
+    <header class="bg-amber-600 p-6 rounded-xl shadow-lg border border-amber-500 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
       <div>
         <h1 class="text-3xl font-extrabold tracking-tight">ALBARDÓN - Costos</h1>
-        <p class="text-amber-100 text-sm mt-1">Gestión Sincronizada en Tiempo Real (PC & Celular)</p>
+        <p class="text-amber-100 text-sm mt-1">Escandallo basado en Planilla de Producción</p>
       </div>
       <div id="estadoNube" class="text-xs bg-amber-800 text-amber-200 px-3 py-1.5 rounded-full border border-amber-500 font-medium">
         ⏳ Conectando a la nube...
       </div>
     </header>
 
-    <!-- Estructura de Costos Fijos Mensuales -->
-    <section class="bg-slate-800 p-5 rounded-xl border border-slate-700 space-y-4 shadow-md">
-      <h2 class="text-lg font-semibold text-amber-400 border-b border-slate-700 pb-2">1. Estructura Fija Mensual</h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <!-- Estructura Fija y Datos del Batch -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <section class="bg-slate-800 p-4 rounded-xl border border-slate-700 space-y-3 md:col-span-1">
+        <h2 class="text-sm font-semibold text-amber-400 border-b border-slate-700 pb-1">Datos del Batch</h2>
         <div>
-          <label class="block text-xs text-slate-400 mb-1">Alquiler + Impuestos + Servicios ($/mes)</label>
-          <input id="costoFijo" type="number" value="1200000" oninput="guardarFijosNube(); calcular();" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white">
+          <label class="block text-xs text-slate-400 mb-1">Fecha</label>
+          <input id="batchFecha" type="date" onchange="guardarDatosNube()" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-xs text-white">
         </div>
         <div>
-          <label class="block text-xs text-slate-400 mb-1">Sueldos y Estructura ($/mes)</label>
-          <input id="sueldos" type="number" value="1300000" oninput="guardarFijosNube(); calcular();" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white">
+          <label class="block text-xs text-slate-400 mb-1">N° de Batch / Lote</label>
+          <input id="batchNum" type="text" value="B-001" oninput="guardarDatosNube()" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-xs text-amber-300 font-bold">
         </div>
         <div>
-          <label class="block text-xs text-slate-400 mb-1">Producción Objetivo (L/mes)</label>
-          <input id="litrosMes" type="number" value="4000" oninput="guardarFijosNube(); calcular();" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white">
+          <label class="block text-xs text-slate-400 mb-1">Litros Producidos (L)</label>
+          <input id="litrosBatch" type="number" value="500" oninput="calcularTodo()" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-xs text-white">
         </div>
-      </div>
-    </section>
+      </section>
+
+      <section class="bg-slate-800 p-4 rounded-xl border border-slate-700 space-y-3 md:col-span-2">
+        <h2 class="text-sm font-semibold text-amber-400 border-b border-slate-700 pb-1">Estructura Fija Mensual (Absorción)</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <label class="block text-xs text-slate-400 mb-1">Alquiler + Servicios ($)</label>
+            <input id="costoFijo" type="number" value="1200000" oninput="guardarFijosNube(); calcularTodo();" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-xs text-white">
+          </div>
+          <div>
+            <label class="block text-xs text-slate-400 mb-1">Sueldos y Estructura ($)</label>
+            <input id="sueldos" type="number" value="1300000" oninput="guardarFijosNube(); calcularTodo();" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-xs text-white">
+          </div>
+          <div>
+            <label class="block text-xs text-slate-400 mb-1">Obj. Producción (L/mes)</label>
+            <input id="litrosMes" type="number" value="4000" oninput="guardarFijosNube(); calcularTodo();" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-xs text-white">
+          </div>
+        </div>
+      </section>
+    </div>
 
     <!-- Módulo de Recetas por Estilo -->
     <section class="bg-slate-800 p-5 rounded-xl border border-slate-700 space-y-4 shadow-md">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-700 pb-3">
         <div class="flex items-center gap-2 w-full sm:w-auto">
-          <label class="text-sm text-slate-300 font-semibold">Receta:</label>
+          <label class="text-sm text-slate-300 font-semibold">ESTILO:</label>
           <select id="selectorRecetas" onchange="cargarRecetaSeleccionada()" class="bg-slate-900 border border-amber-500/50 rounded-lg px-3 py-1.5 text-sm font-bold text-amber-300 flex-1">
           </select>
         </div>
         <div class="flex gap-2">
           <button onclick="nuevaReceta()" class="text-xs bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-2 rounded transition">
-            + Nueva Receta
+            + Nuevo Estilo
           </button>
           <button onclick="guardarRecetaActualNube()" class="text-xs bg-amber-600 hover:bg-amber-500 text-white font-bold px-3 py-2 rounded transition">
-            💾 Guardar en Nube
+            💾 Guardar Nube
           </button>
           <button onclick="borrarRecetaActualNube()" class="text-xs bg-rose-800 hover:bg-rose-700 text-white font-bold px-2.5 py-2 rounded transition">
             🗑️
@@ -64,77 +82,154 @@
       </div>
 
       <!-- Nombre del Estilo -->
-      <div>
-        <label class="block text-xs text-slate-400 mb-1">Nombre del Estilo / Receta</label>
-        <input id="nombreEstilo" type="text" value="IPA Cervecería" oninput="actualizarNombreEnSelector()" class="w-full sm:w-1/2 bg-slate-900 border border-slate-700 rounded-lg p-2 text-amber-300 font-bold">
+      <div class="w-full sm:w-1/2">
+        <label class="block text-xs text-slate-400 mb-1">Nombre del Estilo</label>
+        <input id="nombreEstilo" type="text" value="Golden Ale" oninput="actualizarNombreEnSelector()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-amber-300 font-bold">
       </div>
 
-      <!-- Parámetros Generales del Lote -->
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-slate-900/60 p-3 rounded-lg">
-        <div>
-          <label class="block text-xs text-slate-400 mb-1">Tamaño Lote Mosto (L)</label>
-          <input id="volumenLote" type="number" value="500" oninput="calcularReceta()" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white text-sm">
+      <!-- Granos (Maltas) -->
+      <div class="space-y-2">
+        <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider">🌾 Granos / Maltas</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-300">
+            <thead class="bg-slate-900 text-slate-400">
+              <tr>
+                <th class="p-2">Tipo</th>
+                <th class="p-2 w-28">Cantidad (kg)</th>
+                <th class="p-2 w-32">Precio x kg ($)</th>
+                <th class="p-2 w-28 text-right">Total ($)</th>
+                <th class="p-2 w-8"></th>
+              </tr>
+            </thead>
+            <tbody id="tablaGranos" class="divide-y divide-slate-700"></tbody>
+          </table>
         </div>
-        <div>
-          <label class="block text-xs text-slate-400 mb-1">Pérdida / Merma (%)</label>
-          <input id="mermaPct" type="number" value="15" oninput="calcularReceta()" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white text-sm">
+        <button onclick="agregarFila('granos')" class="text-xs text-amber-400 hover:underline">+ Agregar Grano</button>
+      </div>
+
+      <!-- Lúpulos -->
+      <div class="space-y-2">
+        <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider">🌿 Lúpulo</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-300">
+            <thead class="bg-slate-900 text-slate-400">
+              <tr>
+                <th class="p-2">Tipo</th>
+                <th class="p-2 w-28">Cantidad (grs)</th>
+                <th class="p-2 w-32">Precio x 100grs ($)</th>
+                <th class="p-2 w-28 text-right">Total ($)</th>
+                <th class="p-2 w-8"></th>
+              </tr>
+            </thead>
+            <tbody id="tablaLupulo" class="divide-y divide-slate-700"></tbody>
+          </table>
         </div>
-        <div>
-          <label class="block text-xs text-slate-400 mb-1">Litros Finales Netos (L)</label>
-          <div id="litrosNetos" class="p-2 text-amber-400 font-bold text-base">425 L</div>
+        <button onclick="agregarFila('lupulo')" class="text-xs text-amber-400 hover:underline">+ Agregar Lúpulo</button>
+      </div>
+
+      <!-- Clarificante y Levadura -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="space-y-2">
+          <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider">✨ Clarificante</h3>
+          <table class="w-full text-left text-xs text-slate-300">
+            <thead class="bg-slate-900 text-slate-400">
+              <tr>
+                <th class="p-2">Tipo</th>
+                <th class="p-2 w-20">Cant. (grs)</th>
+                <th class="p-2 w-24">$/100grs</th>
+                <th class="p-2 text-right">Total</th>
+              </tr>
+            </thead>
+            <tbody id="tablaClarificante" class="divide-y divide-slate-700"></tbody>
+          </table>
+        </div>
+
+        <div class="space-y-2">
+          <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider">🧫 Levadura</h3>
+          <table class="w-full text-left text-xs text-slate-300">
+            <thead class="bg-slate-900 text-slate-400">
+              <tr>
+                <th class="p-2">Tipo</th>
+                <th class="p-2 w-20">Cant. (sobres)</th>
+                <th class="p-2 w-24">$/sobre</th>
+                <th class="p-2 text-right">Total</th>
+              </tr>
+            </thead>
+            <tbody id="tablaLevadura" class="divide-y divide-slate-700"></tbody>
+          </table>
         </div>
       </div>
 
-      <!-- Tabla de Insumos -->
-      <div class="overflow-x-auto">
-        <table class="w-full text-left text-sm text-slate-300">
-          <thead class="bg-slate-900 text-xs text-amber-400 uppercase">
-            <tr>
-              <th class="p-2">Insumo / Ingrediente</th>
-              <th class="p-2 w-28">Cantidad</th>
-              <th class="p-2 w-24">Unidad</th>
-              <th class="p-2 w-32">Precio Un. ($)</th>
-              <th class="p-2 w-28 text-right">Subtotal ($)</th>
-              <th class="p-2 w-10 text-center"></th>
-            </tr>
-          </thead>
-          <tbody id="tablaInsumos" class="divide-y divide-slate-700">
-          </tbody>
-        </table>
+      <!-- Servicios Directos (Gas y Luz) -->
+      <div class="space-y-2 border-t border-slate-700 pt-3">
+        <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider">🔥 Varios (Servicios Directos)</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-900/60 p-3 rounded-lg text-xs">
+          <div>
+            <label class="block text-slate-400 mb-1">Gas Cocción (Horas x 1.9 kg/h)</label>
+            <div class="flex gap-2">
+              <input id="horasGas" type="number" value="4" oninput="calcularTodo()" class="w-1/2 bg-slate-900 border border-slate-700 rounded p-1.5 text-white" placeholder="Horas">
+              <input id="precioKgGas" type="number" value="1100" oninput="calcularTodo()" class="w-1/2 bg-slate-900 border border-slate-700 rounded p-1.5 text-white" placeholder="$/kg Gas">
+            </div>
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Electricidad Estimada por Lote ($)</label>
+            <input id="costoElec" type="number" value="12000" oninput="calcularTodo()" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-white">
+          </div>
+        </div>
       </div>
 
-      <button onclick="agregarInsumo()" class="mt-2 text-xs bg-amber-600/30 hover:bg-amber-600/50 text-amber-300 px-3 py-1.5 rounded border border-amber-500/40 font-medium">
-        + Agregar Insumo
-      </button>
+      <!-- Packaging / Envasado -->
+      <div class="space-y-2 border-t border-slate-700 pt-3">
+        <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider">🍾 Envasado y Packaging (Precios Unitarios)</h3>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 text-xs">
+          <div>
+            <label class="block text-slate-400 mb-1">Botella 330</label>
+            <input id="pBot330" type="number" value="280" oninput="calcularTodo()" class="w-full bg-slate-900 border border-slate-700 rounded p-1 text-white">
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Botella 500</label>
+            <input id="pBot500" type="number" value="350" oninput="calcularTodo()" class="w-full bg-slate-900 border border-slate-700 rounded p-1 text-white">
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Botella 1000</label>
+            <input id="pBot1000" type="number" value="520" oninput="calcularTodo()" class="w-full bg-slate-900 border border-slate-700 rounded p-1 text-white">
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Tapa</label>
+            <input id="pTapa" type="number" value="35" oninput="calcularTodo()" class="w-full bg-slate-900 border border-slate-700 rounded p-1 text-white">
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Etiqueta</label>
+            <input id="pEtiq" type="number" value="65" oninput="calcularTodo()" class="w-full bg-slate-900 border border-slate-700 rounded p-1 text-white">
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">CO₂ / Litro</label>
+            <input id="pCo2Litro" type="number" value="40" oninput="calcularTodo()" class="w-full bg-slate-900 border border-slate-700 rounded p-1 text-white">
+          </div>
+        </div>
+      </div>
     </section>
 
-    <!-- Resultados y Punto de Equilibrio -->
+    <!-- Resultados Resumen de la Planilla -->
     <section class="bg-slate-800 p-6 rounded-xl border border-amber-500/30 space-y-4 shadow-md">
-      <h2 class="text-xl font-bold text-amber-400">📊 Análisis de Costos por Litro y Equilibrio</h2>
+      <h2 class="text-xl font-bold text-amber-400">📊 Resultados: Costo x Litro y Formatos Finales</h2>
       
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 text-center">
         <div class="bg-slate-900 p-4 rounded-lg border border-slate-700">
-          <p class="text-xs text-slate-400">Costo Directo Insumos / Litro</p>
-          <p id="costoVarLitro" class="text-xl font-bold text-emerald-400">$0.00</p>
-        </div>
-        <div class="bg-slate-900 p-4 rounded-lg border border-slate-700">
-          <p class="text-xs text-slate-400">Costo Fijo Absorbido / Litro</p>
-          <p id="costoFijoLitro" class="text-xl font-bold text-amber-400">$0.00</p>
+          <p class="text-xs text-slate-400 mb-1">COSTO X LITRO (Solo Insumos)</p>
+          <p id="resCostoLitroIng" class="text-xl font-bold text-emerald-400">$0.00</p>
         </div>
         <div class="bg-slate-900 p-4 rounded-lg border border-slate-700">
-          <p class="text-xs text-slate-400">Costo Total Real / Litro</p>
-          <p id="costoTotalLitro" class="text-xl font-bold text-white">$0.00</p>
+          <p class="text-xs text-slate-400 mb-1">FINAL 330 cc</p>
+          <p id="resFinal330" class="text-xl font-bold text-amber-300">$0.00</p>
         </div>
-      </div>
-
-      <div class="mt-4 p-4 bg-amber-950/40 border border-amber-600/40 rounded-lg flex flex-col sm:flex-row justify-between items-center gap-4">
-        <div>
-          <p class="text-sm font-semibold text-amber-200">Punto de Equilibrio Requerido:</p>
-          <p class="text-xs text-slate-300">Volumen mensual para cubrir todos los costos fijos (a $1.850/L)</p>
+        <div class="bg-slate-900 p-4 rounded-lg border border-slate-700">
+          <p class="text-xs text-slate-400 mb-1">FINAL 500 cc</p>
+          <p id="resFinal500" class="text-xl font-bold text-amber-300">$0.00</p>
         </div>
-        <div class="text-right">
-          <span id="peLitros" class="text-2xl font-extrabold text-amber-400">0 L</span>
-          <span id="peBarriles" class="text-sm text-slate-400 block">(~0 Barriles de 50L)</span>
+        <div class="bg-slate-900 p-4 rounded-lg border border-slate-700">
+          <p class="text-xs text-slate-400 mb-1">FINAL 1000 cc</p>
+          <p id="resFinal1000" class="text-xl font-bold text-amber-300">$0.00</p>
         </div>
       </div>
     </section>
@@ -142,7 +237,6 @@
   </div>
 
   <script>
-    // CONFIGURACIÓN DE TU FIREBASE ALBARDÓN (Integrada desde tu consola)
     const firebaseConfig = {
       apiKey: "AIzaSyB8PYoKIDYhdcdFlBEIzF2QYlF-IhdXVU0",
       authDomain: "albardon-costos.firebaseapp.com",
@@ -165,12 +259,16 @@
 
     let recetasBD = [];
     let recetaActualId = '';
-    let insumos = [];
+
+    let recetaEstado = {
+      granos: [{ tipo: 'Malta Pilsen', cant: 100, precio: 1200 }],
+      lupulo: [{ tipo: 'Cascade', cant: 500, precio: 4200 }],
+      clarificante: [{ tipo: 'Irish Moss', cant: 50, precio: 1800 }],
+      levadura: [{ tipo: 'US-05', cant: 2, precio: 18000 }]
+    };
 
     function cargarDesdeNube() {
-      if(!rtdb) return cargarLocal();
-      
-      // Escuchar recetas en tiempo real
+      if(!rtdb) return;
       rtdb.ref('recetas').on('value', snapshot => {
         const val = snapshot.val();
         recetasBD = [];
@@ -179,184 +277,178 @@
             recetasBD.push({ id: key, ...val[key] });
           });
         }
-        if(recetasBD.length === 0) {
-          crearRecetaDefault();
-        } else {
-          if(!recetaActualId || !recetasBD.find(r => r.id === recetaActualId)) {
-            recetaActualId = recetasBD[0].id;
-          }
+        if(recetasBD.length === 0) crearRecetaDefault();
+        else {
+          if(!recetaActualId) recetaActualId = recetasBD[0].id;
           actualizarSelector();
           cargarRecetaSeleccionada();
         }
       });
-
-      // Escuchar fijos en tiempo real
-      rtdb.ref('fijos').on('value', snapshot => {
-        const data = snapshot.val();
-        if(data) {
-          document.getElementById('costoFijo').value = data.costoFijo || 1200000;
-          document.getElementById('sueldos').value = data.sueldos || 1300000;
-          document.getElementById('litrosMes').value = data.litrosMes || 4000;
-          calcular();
-        }
-      });
-    }
-
-    function cargarLocal() {
-      recetasBD = JSON.parse(localStorage.getItem('albardon_recetas')) || [];
-      if(recetasBD.length === 0) crearRecetaDefault();
-      else {
-        recetaActualId = recetasBD[0].id;
-        actualizarSelector();
-        cargarRecetaSeleccionada();
-      }
     }
 
     function crearRecetaDefault() {
-      const defaultReceta = {
-        nombre: 'IPA Cervecería',
-        volumenLote: 500,
-        mermaPct: 15,
-        insumos: [
-          { nombre: 'Malta Pilsen', cantidad: 110, unidad: 'kg', precio: 1200 },
-          { nombre: 'Malta Caramel', cantidad: 10, unidad: 'kg', precio: 1600 },
-          { nombre: 'Lúpulo Mosaic', cantidad: 1.5, unidad: 'kg', precio: 45000 },
-          { nombre: 'Levadura US-05', cantidad: 2, unidad: 'sobres', precio: 18000 }
-        ]
+      const defaultData = {
+        nombre: 'Golden Ale',
+        granos: [{ tipo: 'Malta Pilsen', cant: 110, precio: 1200 }],
+        lupulo: [{ tipo: 'Cascade', cant: 600, precio: 3800 }],
+        clarificante: [{ tipo: 'Irish Moss', cant: 40, precio: 1500 }],
+        levadura: [{ tipo: 'US-05', cant: 2, precio: 18000 }]
       };
       if(rtdb) {
-        const newRef = rtdb.ref('recetas').push();
-        newRef.set(defaultReceta);
-        recetaActualId = newRef.key;
-      } else {
-        defaultReceta.id = 'receta_local_1';
-        recetasBD = [defaultReceta];
-        recetaActualId = defaultReceta.id;
-        actualizarSelector();
-        cargarRecetaSeleccionada();
+        const ref = rtdb.ref('recetas').push();
+        ref.set(defaultData);
+        recetaActualId = ref.key;
       }
     }
 
-    function guardarFijosNube() {
-      const fijos = {
-        costoFijo: parseFloat(document.getElementById('costoFijo').value) || 0,
-        sueldos: parseFloat(document.getElementById('sueldos').value) || 0,
-        litrosMes: parseFloat(document.getElementById('litrosMes').value) || 1
-      };
-      if(rtdb) rtdb.ref('fijos').set(fijos);
-      else localStorage.setItem('albardon_fijos', JSON.stringify(fijos));
-    }
-
     function actualizarSelector() {
-      const selector = document.getElementById('selectorRecetas');
-      selector.innerHTML = '';
+      const sel = document.getElementById('selectorRecetas');
+      sel.innerHTML = '';
       recetasBD.forEach(r => {
-        selector.innerHTML += `<option value="${r.id}">${r.nombre}</option>`;
+        sel.innerHTML += `<option value="${r.id}">${r.nombre}</option>`;
       });
-      selector.value = recetaActualId;
+      sel.value = recetaActualId;
     }
 
     function cargarRecetaSeleccionada() {
-      const selector = document.getElementById('selectorRecetas');
-      recetaActualId = selector.value;
-      const receta = recetasBD.find(r => r.id === recetaActualId);
-      if (!receta) return;
+      recetaActualId = document.getElementById('selectorRecetas').value;
+      const r = recetasBD.find(item => item.id === recetaActualId);
+      if(!r) return;
 
-      document.getElementById('nombreEstilo').value = receta.nombre || 'Sin Nombre';
-      document.getElementById('volumenLote').value = receta.volumenLote || 500;
-      document.getElementById('mermaPct').value = receta.mermaPct || 0;
-      insumos = JSON.parse(JSON.stringify(receta.insumos || []));
+      document.getElementById('nombreEstilo').value = r.nombre || 'Sin Nombre';
+      recetaEstado.granos = r.granos || [];
+      recetaEstado.lupulo = r.lupulo || [];
+      recetaEstado.clarificante = r.clarificante || [];
+      recetaEstado.levadura = r.levadura || [];
 
-      renderTabla();
+      renderTablas();
+    }
+
+    function renderTablas() {
+      renderSeccion('granos', 'tablaGranos');
+      renderSeccion('lupulo', 'tablaLupulo');
+      renderSeccion('clarificante', 'tablaClarificante');
+      renderSeccion('levadura', 'tablaLevadura');
+      calcularTodo();
+    }
+
+    function renderSeccion(key, tablaId) {
+      const tbody = document.getElementById(tablaId);
+      tbody.innerHTML = '';
+      recetaEstado[key].forEach((item, idx) => {
+        let subtotal = 0;
+        if(key === 'granos') subtotal = item.cant * item.precio;
+        if(key === 'lupulo' || key === 'clarificante') subtotal = (item.cant / 100) * item.precio;
+        if(key === 'levadura') subtotal = item.cant * item.precio;
+
+        tbody.innerHTML += `
+          <tr>
+            <td class="p-1.5"><input type="text" value="${item.tipo}" onchange="modificarFila('${key}', ${idx}, 'tipo', this.value)" class="w-full bg-slate-900 border border-slate-700 rounded p-1 text-xs"></td>
+            <td class="p-1.5"><input type="number" value="${item.cant}" onchange="modificarFila('${key}', ${idx}, 'cant', this.value)" class="w-full bg-slate-900 border border-slate-700 rounded p-1 text-xs"></td>
+            <td class="p-1.5"><input type="number" value="${item.precio}" onchange="modificarFila('${key}', ${idx}, 'precio', this.value)" class="w-full bg-slate-900 border border-slate-700 rounded p-1 text-xs"></td>
+            <td class="p-1.5 text-right font-semibold text-emerald-400">$${Math.round(subtotal).toLocaleString()}</td>
+            <td class="p-1.5 text-center"><button onclick="eliminarFila('${key}', ${idx})" class="text-slate-500 hover:text-rose-400">✕</button></td>
+          </tr>
+        `;
+      });
+    }
+
+    function agregarFila(key) {
+      recetaEstado[key].push({ tipo: 'Nuevo', cant: 0, precio: 0 });
+      renderTablas();
+    }
+
+    function eliminarFila(key, idx) {
+      recetaEstado[key].splice(idx, 1);
+      renderTablas();
+    }
+
+    function modificarFila(key, idx, campo, val) {
+      recetaEstado[key][idx][campo] = campo === 'tipo' ? val : (parseFloat(val) || 0);
+      renderTablas();
     }
 
     function guardarRecetaActualNube() {
-      const nombre = document.getElementById('nombreEstilo').value.trim() || 'Receta Sin Nombre';
-      const vol = parseFloat(document.getElementById('volumenLote').value) || 500;
-      const merma = parseFloat(document.getElementById('mermaPct').value) || 0;
-
-      const datosReceta = {
+      const nombre = document.getElementById('nombreEstilo').value;
+      const data = {
         nombre: nombre,
-        volumenLote: vol,
-        mermaPct: merma,
-        insumos: insumos
+        granos: recetaEstado.granos,
+        lupulo: recetaEstado.lupulo,
+        clarificante: recetaEstado.clarificante,
+        levadura: recetaEstado.levadura
       };
-
       if(rtdb) {
-        rtdb.ref('recetas/' + recetaActualId).set(datosReceta);
-        alert('☁️ Receta "' + nombre + '" sincronizada en tiempo real.');
-      } else {
-        localStorage.setItem('albardon_recetas', JSON.stringify(recetasBD));
-        alert('💾 Receta guardada localmente.');
+        rtdb.ref('recetas/' + recetaActualId).set(data);
+        alert('☁️ Receta de Albardón guardada con éxito.');
       }
     }
 
     function nuevaReceta() {
       const nueva = {
-        nombre: 'Nueva Receta',
-        volumenLote: 500,
-        mermaPct: 10,
-        insumos: [{ nombre: 'Malta Base', cantidad: 100, unidad: 'kg', precio: 1200 }]
+        nombre: 'Nuevo Estilo',
+        granos: [{ tipo: 'Malta Base', cant: 100, precio: 1200 }],
+        lupulo: [{ tipo: 'Lúpulo Base', cant: 500, precio: 4000 }],
+        clarificante: [{ tipo: 'Clarificante', cant: 30, precio: 1500 }],
+        levadura: [{ tipo: 'Levadura', cant: 2, precio: 18000 }]
       };
       if(rtdb) {
-        const newRef = rtdb.ref('recetas').push();
-        newRef.set(nueva);
-        recetaActualId = newRef.key;
+        const ref = rtdb.ref('recetas').push();
+        ref.set(nueva);
+        recetaActualId = ref.key;
       }
     }
 
     function borrarRecetaActualNube() {
-      if (recetasBD.length <= 1) {
-        alert('⚠️ No podés borrar la única receta disponible.');
-        return;
-      }
-      if (confirm('¿Seguro que querés borrar esta receta?')) {
+      if(recetasBD.length <= 1) return alert('No podés borrar el único estilo.');
+      if(confirm('¿Borrar estilo actual?')) {
         if(rtdb) rtdb.ref('recetas/' + recetaActualId).remove();
       }
     }
 
-    function renderTabla() {
-      const tbody = document.getElementById('tablaInsumos');
-      tbody.innerHTML = '';
-      insumos.forEach((item, index) => {
-        const subtotal = (item.cantidad || 0) * (item.precio || 0);
-        tbody.innerHTML += `
-          <tr>
-            <td class="p-2"><input type="text" value="${item.nombre || ''}" onchange="actualizarInsumo(${index}, 'nombre', this.value)" class="bg-slate-900 border border-slate-700 rounded p-1 w-full text-xs"></td>
-            <td class="p-2"><input type="number" value="${item.cantidad || 0}" onchange="actualizarInsumo(${index}, 'cantidad', this.value)" class="bg-slate-900 border border-slate-700 rounded p-1 w-full text-xs"></td>
-            <td class="p-2"><input type="text" value="${item.unidad || 'kg'}" onchange="actualizarInsumo(${index}, 'unidad', this.value)" class="bg-slate-900 border border-slate-700 rounded p-1 w-full text-xs"></td>
-            <td class="p-2"><input type="number" value="${item.precio || 0}" onchange="actualizarInsumo(${index}, 'precio', this.value)" class="bg-slate-900 border border-slate-700 rounded p-1 w-full text-xs"></td>
-            <td class="p-2 text-right font-semibold text-emerald-400">$${subtotal.toLocaleString()}</td>
-            <td class="p-2 text-center"><button onclick="eliminarInsumo(${index})" class="text-slate-500 hover:text-rose-400 font-bold text-xs">✕</button></td>
-          </tr>
-        `;
-      });
-      calcularReceta();
+    function calcularTodo() {
+      const litrosBatch = parseFloat(document.getElementById('litrosBatch').value) || 1;
+
+      // Totales
+      const totGranos = recetaEstado.granos.reduce((a, b) => a + (b.cant * b.precio), 0);
+      const totLupulo = recetaEstado.lupulo.reduce((a, b) => a + ((b.cant / 100) * b.precio), 0);
+      const totClari = recetaEstado.clarificante.reduce((a, b) => a + ((b.cant / 100) * b.precio), 0);
+      const totLeva = recetaEstado.levadura.reduce((a, b) => a + (b.cant * b.precio), 0);
+
+      // Gas (1.9 kg/h)
+      const hsGas = parseFloat(document.getElementById('horasGas').value) || 0;
+      const precioGas = parseFloat(document.getElementById('precioKgGas').value) || 0;
+      const totGas = hsGas * 1.9 * precioGas;
+
+      const totElec = parseFloat(document.getElementById('costoElec').value) || 0;
+
+      const costoTotalIngredientes = totGranos + totLupulo + totClari + totLeva + totGas + totElec;
+      const costoLitroBase = costoTotalIngredientes / litrosBatch;
+
+      // Packaging
+      const p330 = parseFloat(document.getElementById('pBot330').value) || 0;
+      const p500 = parseFloat(document.getElementById('pBot500').value) || 0;
+      const p1000 = parseFloat(document.getElementById('pBot1000').value) || 0;
+      const pTapa = parseFloat(document.getElementById('pTapa').value) || 0;
+      const pEtiq = parseFloat(document.getElementById('pEtiq').value) || 0;
+      const pCo2 = parseFloat(document.getElementById('pCo2Litro').value) || 0;
+
+      const final330 = (costoLitroBase * 0.33) + p330 + pTapa + pEtiq + (pCo2 * 0.33);
+      const final500 = (costoLitroBase * 0.50) + p500 + pTapa + pEtiq + (pCo2 * 0.50);
+      const final1000 = (costoLitroBase * 1.00) + p1000 + pTapa + pEtiq + (pCo2 * 1.00);
+
+      document.getElementById('resCostoLitroIng').innerText = '$' + costoLitroBase.toFixed(2);
+      document.getElementById('resFinal330').innerText = '$' + final330.toFixed(2);
+      document.getElementById('resFinal500').innerText = '$' + final500.toFixed(2);
+      document.getElementById('resFinal1000').innerText = '$' + final1000.toFixed(2);
     }
 
-    function agregarInsumo() {
-      insumos.push({ nombre: 'Nuevo Insumo', cantidad: 1, unidad: 'kg', precio: 0 });
-      renderTabla();
+    function actualizarNombreEnSelector() {
+      const nombre = document.getElementById('nombreEstilo').value;
+      const option = document.querySelector(`#selectorRecetas option[value="${recetaActualId}"]`);
+      if (option) option.textContent = nombre;
     }
 
-    function eliminarInsumo(index) {
-      insumos.splice(index, 1);
-      renderTabla();
-    }
-
-    function actualizarInsumo(index, campo, valor) {
-      if (campo === 'cantidad' || campo === 'precio') {
-        insumos[index][campo] = parseFloat(valor) || 0;
-      } else {
-        insumos[index][campo] = valor;
-      }
-      renderTabla();
-    }
-
-    function calcularReceta() {
-      const volLote = parseFloat(document.getElementById('volumenLote').value) || 1;
-      const merma = parseFloat(document.getElementById('mermaPct').value) || 0;
-      const litrosNetos = volLote * (1 - (merma / 100));
-      document.getElementById('litrosNetos').innerText = Math.round(litrosNetos) + ' L';
-
-      const costoTotalInsumos = insumos.reduce((acc, item)
+    cargarDesdeNube();
+  </script>
+</body>
+</html>
